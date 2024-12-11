@@ -5,6 +5,14 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const { fetchAds } = require("./dbConnect");
 const path = require("path");
 const cors = require("cors");
+require('dotenv').config();
+
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+
+console.log("Supabase URL:", SUPABASE_URL);
 
 const app = express();
 
@@ -40,7 +48,7 @@ app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
-    res.redirect("https://ads-frontend-git-main-babypors-projects.vercel.app/dashboard"); // เปลี่ยน URL ให้ Redirect กลับไปยัง Frontend
+    res.redirect("https://ads-frontback-git-main-babypors-projects.vercel.app/dashboard"); // เปลี่ยน URL ให้ Redirect กลับไปยัง Frontend
   }
 );
 
@@ -51,8 +59,11 @@ passport.deserializeUser((user, done) => done(null, user));
 app.use(passport.initialize());
 app.use(passport.session());
 
+
 app.use(cors({
-  origin: "https://ads-frontend-git-main-babypors-projects.vercel.app",
+  origin: "https://ads-frontback.vercel.app/", // แทนด้วย URL จริงของ Frontend
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
 }));
 // Route สำหรับหน้าแรก
 app.get("/", (req, res) => {
@@ -69,7 +80,7 @@ app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
-    res.redirect("https://ads-frontend-git-main-babypors-projects.vercel.app/dashboard");
+    res.redirect("https://ads-frontback-git-main-babypors-projects.vercel.app/dashboard");
   }
 );
 
